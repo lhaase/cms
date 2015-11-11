@@ -6,12 +6,13 @@ pageRank = PageRank()
 
 webGraph = frontier.getWebGraph()
 
-# for entry in sorted(webGraph.keys()):
-    # print entry + ' -> ' + ', '.join(webGraph[entry])
 
 print
-print '-------------'
+print '-*( Web Graph )*-'
 print
+for entry in sorted(webGraph.keys()):
+    print entry + ' -> ' + ', '.join(webGraph[entry])
+
 
 pr = pageRank.getPageRank(webGraph)
 

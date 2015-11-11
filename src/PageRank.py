@@ -1,41 +1,64 @@
-import urllib
-import re
-from Parser import Parser
-
 class PageRank:
-
     def getPageRank(self, webGraph):
+
+        print
+        print '-*( Page Ranks )*-'
+        print
+
         backlinkGraph = self.createBacklinkGraph(webGraph)
+        pageRanks = self.calculatePageRanks(webGraph, backlinkGraph)
 
-        # for entry in sorted(backlinkGraph.keys()):
-            # print entry + ' <- ' + ', '.join(backlinkGraph[entry])
+        self.printPageRanks(pageRanks)
 
+    def printPageRanks(self, pageRanks):
 
+        print
+        print '\t\t\t\t',
+        for page in sorted(pageRanks[1]):
+            print '\t\t\t' + page,
+        for step, pageRank in sorted(pageRanks.iteritems()):
+            print
+            print 'Step ' + str(step) + '\t',
+            for page, rank in sorted(pageRank.iteritems()):
+                print '\t\t' + '{0:.4f}'.format(rank),
+
+    def calculatePageRanks(self, webGraph, backlinkGraph):
         d = 0.95
         t = 0.05
+        delta = 0.04
         N = len(webGraph)
 
-        pageRank0 = {}
-        for page in webGraph:
-            pageRank0[page] = 1.0 / N
+        pageRanks = {}
+        step = 0
+        diff = ''
 
-        for page in webGraph:
-            backlinks = backlinkGraph[page]
+        while diff > delta:
+            pageRank = {}
+            print 'Step ' + str(step) + ' diff: ',
+            if step == 0:
+                print
+                for page in webGraph:
+                    pageRank[page] = 1.0 / N
+            else:
+                diff = 0
+                prevPageRank = pageRanks[step - 1]
 
-            sumA = 0
-            for pj in backlinks:
-                sumA += pageRank0[pj] / len(webGraph[pj])
+                for page in webGraph:
+                    sumA = 0
+                    for pj in backlinkGraph[page]:
+                        sumA += prevPageRank[pj] / len(webGraph[pj])
+                    sumB = 0
+                    for pj in webGraph:
+                        if len(webGraph[pj]) == 0:
+                            sumB += prevPageRank[pj] / N
+                    pageRank[page] = d * (sumA + sumB) + (t / N)
+                    diff += abs(pageRank[page] - prevPageRank[page])
+                print '{0:.4f}'.format(diff)
+            pageRanks[step] = pageRank
 
-            sumB = 0
-            for pj in webGraph:
-                if len(webGraph[pj]) == 0:
-                    sumB += pageRank0[pj] / N
+            step += 1
 
-            pr = d * (sumA + sumB) + (t/N)
-
-            print '- ' + page + ': ' + str(pr)
-
-
+        return pageRanks
 
     def createBacklinkGraph(self, webGraph):
         backlinkGraph = {}
