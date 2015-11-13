@@ -1,8 +1,11 @@
 from Frontier import Frontier
 from PageRanker import PageRanker
+from Indexer import Indexer
+import re
 
 frontier = Frontier()
 pageRanker = PageRanker()
+indexer = Indexer()
 
 seedDocuments = [
     'http://people.f4.htw-berlin.de/fileadmin/user_upload/Dozenten/WI-Dozenten/Classen/DAWeb/smdocs/d01.html',
@@ -16,6 +19,14 @@ def printWebGraph(webGraph):
     print
     for entry in sorted(webGraph.keys()):
         print entry + ' -> ' + ', '.join(webGraph[entry])
+
+def printIndex(index):
+    print
+    print '-*( Indices )*-'
+    print
+    for term,occurences in sorted(index.iteritems()):
+        print '(' + term[0] + ', df:' + str(term[1]) + ') ->',
+        print re.sub('(u)?\'', '', str(occurences))
 
 
 def printPageRanks(pageRanks):
@@ -34,7 +45,9 @@ def printPageRanks(pageRanks):
 
 webGraph = frontier.getWebGraph(seedDocuments)
 pageRank = pageRanker.getPageRank(webGraph)
+index = indexer.getIndex(webGraph)
 
 printWebGraph(webGraph)
 printPageRanks(pageRank)
+printIndex(index)
 
