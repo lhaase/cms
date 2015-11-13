@@ -1,11 +1,13 @@
 from Frontier import Frontier
 from PageRanker import PageRanker
 from Indexer import Indexer
+from Scorer import Scorer
 import re
 
 frontier = Frontier()
 pageRanker = PageRanker()
 indexer = Indexer()
+scorer = Scorer()
 
 seedDocuments = [
     'http://people.f4.htw-berlin.de/fileadmin/user_upload/Dozenten/WI-Dozenten/Classen/DAWeb/smdocs/d01.html',
@@ -47,7 +49,8 @@ webGraph = frontier.getWebGraph(seedDocuments)
 pageRank = pageRanker.getPageRank(webGraph)
 index = indexer.getIndex(webGraph)
 
-printWebGraph(webGraph)
-printPageRanks(pageRank)
-printIndex(index)
+# printWebGraph(webGraph)
+# printPageRanks(pageRank)
+# printIndex(index)
 
+scorer.createScoring(index, webGraph)
