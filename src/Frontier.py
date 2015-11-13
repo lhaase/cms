@@ -5,16 +5,13 @@ from Parser import Parser
 
 class Frontier:
     def __init__(self):
-        self.pageUrl1 = 'http://people.f4.htw-berlin.de/fileadmin/user_upload/Dozenten/WI-Dozenten/Classen/DAWeb/smdocs/d01.html'
-        self.pageUrl2 = 'http://people.f4.htw-berlin.de/fileadmin/user_upload/Dozenten/WI-Dozenten/Classen/DAWeb/smdocs/d06.html'
-        self.pageUrl3 = 'http://people.f4.htw-berlin.de/fileadmin/user_upload/Dozenten/WI-Dozenten/Classen/DAWeb/smdocs/d08.html'
         self.sitesAlreadyCrawled = []
         self.parser = Parser()
         self.webGraph = {}
 
 
-    def getWebGraph(self):
-        for url in [self.pageUrl1, self.pageUrl2, self.pageUrl3]:
+    def getWebGraph(self, urls):
+        for url in urls:
             self.crawlIfNeeded(url)
 
         return self.webGraph

@@ -1,26 +1,7 @@
-class PageRank:
+class PageRanker:
     def getPageRank(self, webGraph):
-
-        print
-        print '-*( Page Ranks )*-'
-        print
-
         backlinkGraph = self.createBacklinkGraph(webGraph)
-        pageRanks = self.calculatePageRanks(webGraph, backlinkGraph)
-
-        self.printPageRanks(pageRanks)
-
-    def printPageRanks(self, pageRanks):
-
-        print
-        print '\t\t\t\t',
-        for page in sorted(pageRanks[1]):
-            print '\t\t\t' + page,
-        for step, pageRank in sorted(pageRanks.iteritems()):
-            print
-            print 'Step ' + str(step) + '\t',
-            for page, rank in sorted(pageRank.iteritems()):
-                print '\t\t' + '{0:.4f}'.format(rank),
+        return self.calculatePageRanks(webGraph, backlinkGraph)
 
     def calculatePageRanks(self, webGraph, backlinkGraph):
         d = 0.95
@@ -34,9 +15,9 @@ class PageRank:
 
         while diff > delta:
             pageRank = {}
-            print 'Step ' + str(step) + ' diff: ',
+            # print 'Step ' + str(step) + ' diff: ',
             if step == 0:
-                print
+                # print
                 for page in webGraph:
                     pageRank[page] = 1.0 / N
             else:
@@ -53,9 +34,8 @@ class PageRank:
                             sumB += prevPageRank[pj] / N
                     pageRank[page] = d * (sumA + sumB) + (t / N)
                     diff += abs(pageRank[page] - prevPageRank[page])
-                print '{0:.4f}'.format(diff)
+                # print '{0:.4f}'.format(diff)
             pageRanks[step] = pageRank
-
             step += 1
 
         return pageRanks
