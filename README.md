@@ -28,7 +28,7 @@ Die Steuerung über die Frontier soll sichergestellen, dass alle verlinkten Seit
 ##### ~~2.2 PageRank~~
 Die Seitenstruktur ist Ausgangspunkt für die Berechnung der PageRanks aller Seiten. Die Berechnung kann über Matrizenrechnung erfolgen oder durch den Aufbau einer internen Graphstruktur. Verwenden Sie (0.95, 0.05) für die Kombination Dämpfungsfak- tor/Teleportationsrate und einen Delta-Wert von 0.04.
 
-##### 2.3 Suche
+##### ~~2.3 Suche~~
 Zur Implementierung der Suche müssen Sie einen Index aufbauen, wie er in den Folien beschrieben ist. Verwenden Sie
 * die vorgegebene tf-idf-Gewichtung,
 * das Cosinusfkt für das Scoring

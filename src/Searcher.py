@@ -54,24 +54,34 @@ class Searcher:
 
         documentLengths = {}
         matchingDocs = {}
-        for page,scores in self.pageTokenScores.iteritems():
+        for doc,scores in self.pageTokenScores.iteritems():
             documentLength = 0.0
             for token,weight in scores.iteritems():
                 documentLength += weight * weight
                 if (token in queryScores):
-                    matchingDocs[page] = scores
+                    matchingDocs[doc] = scores
             documentLength = math.sqrt(documentLength)
-            documentLengths[page] = documentLength
+            documentLengths[doc] = documentLength
 
         similarities = {}
         for word,weight in queryScores.iteritems():
             for doc,scoreList in matchingDocs.iteritems():
-                docWeight = scoreList[word]
+                if word in scoreList:
+                    docWeight = scoreList[word]
+                else:
+                    docWeight = 0.0
                 docLength = documentLengths[doc]
                 sim = (weight * docWeight) / (queryLength * docLength)
-                similarities[sim] = doc
+                if doc not in similarities:
+                    similarities[doc] = sim
+                else:
+                    similarities[doc] += sim
+
+        valuesAsKeys = {}
+        for doc, sim in similarities.iteritems():
+            valuesAsKeys[sim] = doc
 
         print queryScores.keys()
-        for sim,page in sorted(similarities.iteritems(), reverse=True):
-            print page + ':\t' + '{0:.6f}'.format(sim)
+        for sim, doc in sorted(valuesAsKeys.iteritems(), reverse=True):
+            print doc + ':\t' + '{0:.6f}'.format(sim)
 
