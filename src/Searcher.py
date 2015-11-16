@@ -46,8 +46,7 @@ class Searcher:
             queryLength += score * score
         return math.sqrt(queryLength)
 
-
-    def search(self, query):
+    def getCosineSim(self,query):
 
         queryScores = self.getQueryScores(query)
         queryLength = self.getQueryLength(queryScores)
@@ -77,11 +76,36 @@ class Searcher:
                 else:
                     similarities[doc] += sim
 
+        return similarities
+
+
+    def search(self, query):
+        cosineSim = self.getCosineSim(query)
         valuesAsKeys = {}
-        for doc, sim in similarities.iteritems():
+        for doc, sim in cosineSim.iteritems():
             valuesAsKeys[sim] = doc
 
-        print queryScores.keys()
+        print query
         for sim, doc in sorted(valuesAsKeys.iteritems(), reverse=True):
             print doc + ':\t' + '{0:.6f}'.format(sim)
 
+
+    def searchAdvanced(self, query, pageRanks):
+        cosineSim = self.getCosineSim(query)
+        pageRank = pageRanks[len(pageRanks)-1]
+
+        combinedPrCs = {}
+
+        for doc in cosineSim:
+            if doc in pageRank:
+                cs = cosineSim[doc]
+                pr = pageRank[doc]
+                combinedPrCs[doc] = 2 * cs * pr / (cs + pr)
+
+        valuesAsKeys = {}
+        for doc, prcs in combinedPrCs.iteritems():
+            valuesAsKeys[prcs] = doc
+
+        print query
+        for prcs, doc in sorted(valuesAsKeys.iteritems(), reverse=True):
+            print doc + ':\t' + '{0:.6f}'.format(prcs)

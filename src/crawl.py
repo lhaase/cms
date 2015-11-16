@@ -64,7 +64,6 @@ pageContents = indexer.getPageToken(webGraph)
 index = indexer.getIndex(pageContents)
 
 searcher = Searcher(index, pageContents)
-# scores = searcher.getScoring(index, pageContents)
 
 printWebGraph(webGraph)
 printPageRanks(pageRank)
@@ -72,6 +71,13 @@ printPageContents(pageContents)
 printIndex(index)
 
 searcher.search('tokens')
+searcher.searchAdvanced('tokens', pageRank)
+print
 searcher.search('index')
+searcher.searchAdvanced('index', pageRank)
+print
 searcher.search('classification')
-# searcher.search('tokens classification')
+searcher.searchAdvanced('classification', pageRank)
+print
+searcher.search('tokens classification')
+searcher.searchAdvanced('tokens classification', pageRank)
