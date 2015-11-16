@@ -9,8 +9,7 @@ class Indexer:
         self.stopWords = self.getStopWords()
         self.remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
 
-
-    def getIndex(self, webGraph):
+    def getPageToken(self, webGraph):
         pageToken = {}
 
         for page in sorted(webGraph):
