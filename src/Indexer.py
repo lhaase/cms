@@ -26,6 +26,10 @@ class Indexer:
                 if word not in self.stopWords:
                     token.append(word)
             pageToken[page] = token
+        return pageToken
+
+
+    def getIndex(self, pageToken):
 
         tokenSet = {}
         for page, tokenList in sorted(pageToken.iteritems()):
