@@ -2,7 +2,9 @@ from NbClassifier import NbClassifier
 
 nb = NbClassifier()
 
-def doPolitik():
-    nb.train('politik')
+nb.train('politik')
+nb.train('wirtschaft')
+nb.train('sport')
 
-doPolitik()
+nb.classifyAllTestDocuments()
+
