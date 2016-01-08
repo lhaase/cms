@@ -32,6 +32,7 @@ class NbClassifier:
         for category in self.categories:
             probs[category] = self.calcProbability(document, category)
 
+        # print probs
         return max(probs, key=probs.get)
 
 
@@ -72,7 +73,7 @@ class NbClassifier:
 
     def calcPtc(self, word, category):
         categoryToken = self.categories[category]
-        tokenCount = 1
+        tokenCount = 0
         for token,count in categoryToken[1].iteritems():
             tokenCount += (count + 1)
 
