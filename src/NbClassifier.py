@@ -2,6 +2,9 @@ import string
 import re
 import os
 import math
+import urllib
+from bs4 import BeautifulSoup
+
 
 class NbClassifier:
 
@@ -9,6 +12,9 @@ class NbClassifier:
         self.categories = { 'politik': (0, {}),
                             'wirtschaft': (0, {}),
                             'sport': (0, {})}
+        self.remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
+        self.stopWords = self.getStopWords()
+
         self.docCount = self.getDocCount()
 
     def classifyAllTestDocuments(self):
@@ -38,13 +44,15 @@ class NbClassifier:
 
     def calcProbability(self, document, category):
 
+        # print category
         pc = self.categories[category][0] / self.docCount
         ptcSum = 0.0
 
         docWords = document.split(' ')
         docWords = filter(None, docWords)
+        new_items = [item for item in docWords if not item.isdigit() and item not in self.stopWords]
 
-        for word in docWords:
+        for word in new_items:
             ptc = self.calcPtc(word, category)
             ptcSum += math.log(ptc, 10)
 
@@ -61,8 +69,9 @@ class NbClassifier:
         for doc in documents:
             words = doc.split(' ')
             words = filter(None, words)
+            new_items = [item for item in words if not item.isdigit() and item not in self.stopWords]
 
-            for word in words:
+            for word in new_items:
                 if word not in categoryToken:
                     categoryToken[word] = 1
                 else:
@@ -73,22 +82,22 @@ class NbClassifier:
 
     def calcPtc(self, word, category):
         categoryToken = self.categories[category]
-        tokenCount = 0
+        tokenCount = 0.0
         for token,count in categoryToken[1].iteritems():
             tokenCount += (count + 1)
 
         if word in categoryToken[1]:
-            tct = categoryToken[1][word] + 1
+            tct = categoryToken[1][word] + 1.0
         else:
-            tct = 1
+            tct = 1.0
 
-        return float(tct) / tokenCount
+        return tct / tokenCount
 
 
     def cleanDocuments(self, documents):
         cleaned = []
         for document in documents:
-            plaintext = re.sub('\n+', ' ', document).lower().translate(None, string.punctuation)
+            plaintext = re.sub('\n+', ' ', document).decode('utf-8').lower().translate(self.remove_punctuation_map)
             cleaned.append(plaintext)
         return cleaned
 
@@ -109,3 +118,8 @@ class NbClassifier:
                 if file.endswith('txt'):
                     count = count + 1
         return count
+
+    def getStopWords(self):
+        stopwordsUrl = "http://people.f4.htw-berlin.de/fileadmin/user_upload/Dozenten/WI-Dozenten/Classen/DAWeb/stop_words.txt"
+        soup = BeautifulSoup(urllib.urlopen(stopwordsUrl).read(), 'html.parser')
+        return re.findall('\'(\w+)\'', soup.get_text())
