@@ -20,9 +20,9 @@ class Searcher:
             for term,occurences in index.iteritems():
                 for occurence in occurences:
                     if occurence[0] == page:
-                        tf = 1.0 + math.log(occurence[1], 10)
-                        wtd = tf * idfs[term[0]]
-                        weights[term[0]] = wtd
+                        tfw = 1.0 + math.log(occurence[1], 10)
+                        score = tfw * idfs[term[0]]
+                        weights[term[0]] = score
 
             self.pageTokenScores[page] = weights
         self.tokenIdfs = idfs
@@ -35,8 +35,8 @@ class Searcher:
         for word in queryWords:
             tfw = 1.0 + math.log(queryWords.count(word), 10)
             idf = self.tokenIdfs[word]
-            wtd = tfw * idf
-            queryScores[word] = wtd
+            score = tfw * idf
+            queryScores[word] = score
         return queryScores
 
 

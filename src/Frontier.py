@@ -18,7 +18,7 @@ class Frontier:
 
 
     def crawlIfNeeded(self, url):
-        if not self.sitesAlreadyCrawled.__contains__(url):
+        if url not in self.sitesAlreadyCrawled:
             linksFound = self.parser.parseLinks(urllib.urlopen(url).read())
             self.addToMap(url, linksFound)
 
